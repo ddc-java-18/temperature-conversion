@@ -1,9 +1,10 @@
 package edu.cnm.deepdive;
 
+import java.util.Scanner;
+
 public class TemperatureConverter {
 
   private static final double CELSIUS_FAHRENHEIT_SCALE_FACTOR = 1.8;
-  ;
   private static final int CELSIUS_FAHRENHEIT_OFFSET = 32;
   private static final double KELVIN_CELSIUS_OFFSET = 273.15;
 
@@ -11,16 +12,20 @@ public class TemperatureConverter {
 
   public static void main(String[] args) {
     System.out.printf("Starting Mode: %s%n", mode);
-    for (String arg : args) {
-      try {
-        mode = Mode.valueOf(arg.toUpperCase());
-        System.out.printf("Change Mode to: %s%n", mode);
-      } catch (IllegalArgumentException e) {
-        double value = Double.parseDouble(arg);
+
+    Scanner scanner = new Scanner(System.in);
+    while (scanner.hasNext()) {
+      if (scanner.hasNext(Mode.PATTERN)) {
+        mode = Mode.valueOf(scanner.next(Mode.PATTERN).toUpperCase());
+      } else if (scanner.hasNextDouble()) {
+        double value = scanner.nextDouble();
         double convertedValue = convert(value);
         System.out.printf("Input = %.2f; Output = %.2f%n", value, convertedValue);
+      } else {
+        throw new IllegalArgumentException(String.format("Invalid input: %s%n", scanner.next()));
       }
     }
+
   }
 
   private static double convert(double value) {
